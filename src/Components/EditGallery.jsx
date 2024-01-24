@@ -13,7 +13,7 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { More, Duplicate, Delete } from "@wix/wix-ui-icons-common";
 
-export default function CreateGallery() {
+export default function EditGallery() {
   const [files, setFiles] = useState([]);
   const [galleryName, setGalleryName] = React.useState("Untitled Gallery");
   const [editingImage, setEditingImage] = useState(null);

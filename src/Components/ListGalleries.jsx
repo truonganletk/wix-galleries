@@ -18,7 +18,7 @@ import {
 } from "@wix/wix-ui-icons-common";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const records = [
   {
@@ -155,9 +155,14 @@ const records = [
 function ListGalleries() {
   const [galleries, setGalleries] = useState(records);
   const [filter, setFilter] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setGalleries(records.filter(({ title }) => title.toLowerCase().includes(filter.toLowerCase())));
+    setGalleries(
+      records.filter(({ title }) =>
+        title.toLowerCase().includes(filter.toLowerCase())
+      )
+    );
   }, [filter]);
 
   const columns = [
@@ -207,7 +212,9 @@ function ListGalleries() {
             {
               text: "Edit gallery",
               icon: <EditSmall />,
-              onClick: () => {},
+              onClick: () => {
+                navigate(`edit/${rowData.id}`);
+              },
             },
             {
               divider: true,

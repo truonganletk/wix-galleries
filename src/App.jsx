@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import ListGalleries from "./Components/ListGalleries";
 import CreateGallery from "./Components/CreateGallery";
+import EditGallery from "./Components/EditGallery";
 
 function ErrorPage() {
   const error = useRouteError();
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "create",
     element: <CreateGallery />,
+  },
+  {
+    path: "edit/:id",
+    element: <EditGallery />,
   },
 ]);
 
