@@ -19,151 +19,35 @@ import {
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-const records = [
-  {
-    id: "a045b201-ee7d-447c-b0c3-746cba83253c",
-    sortOrder: 1644317968.985,
-    title: "Some Title",
-    description: "Some Description",
-    type: "IMAGE",
-    image: {
-      type: "WIX_MEDIA",
-      imageInfo: {
-        id: "11062b_12703ed9a6574547bcaed22b1ce44eef~mv2.jpeg",
-        url: "https://static.wixstatic.com/media/11062b_12703ed9a6574547bcaed22b1ce44eef~mv2.jpeg",
-        height: 4298,
-        width: 6446,
-        altText: "Some Alt",
-        filename: "11062b_12703ed9a6574547bcaed22b1ce44eef~mv2.jpeg",
-      },
-    },
-    createdDate: "2022-02-08T10:59:29Z",
-    tags: {
-      values: ["image"],
-    },
-  },
-  {
-    id: "17c786c6-5d5d-4271-995a-02d007809064",
-    sortOrder: 1642505672333,
-    title: "Video",
-    description: "Video description",
-    type: "VIDEO",
-    video: {
-      type: "YOUTUBE",
-      videoInfo: {
-        id: "",
-        resolutions: [
-          {
-            url: "https://www.youtube.com/watch?v=NCtzkaL2t_Y&ab_channel=TheBeatlesVEVO",
-            height: 0,
-            width: 0,
-            format: "Youtube",
-            quality: null,
-            filename: null,
-          },
-        ],
-        url: "https://www.youtube.com/watch?v=NCtzkaL2t_Y&ab_channel=TheBeatlesVEVO",
-        posters: [
-          {
-            id: "468ec5_347f032da9a04e5b9c03ad2a14a07b52~mv2.jpg",
-            url: "https://static.wixstatic.com/media/468ec5_347f032da9a04e5b9c03ad2a14a07b52~mv2.jpg",
-            height: 720,
-            width: 1280,
-            altText: null,
-            urlExpirationDate: null,
-            filename: "468ec5_347f032da9a04e5b9c03ad2a14a07b52~mv2.jpg",
-            sizeInBytes: null,
-          },
-        ],
-      },
-    },
-    createdDate: "2022-01-18T11:34:34Z",
-  },
-  {
-    id: "975a57a1-eccd-4e28-aac5-265be4dbb4f8",
-    sortOrder: 1646212412985,
-    title: "Mountainous Landscape",
-    description: "Mountainous Landscape Description",
-    type: "VIDEO",
-    video: {
-      type: "WIX_MEDIA",
-      videoInfo: {
-        id: "11062b_20125b6ebe434abd96c4d7773634d1db",
-        resolutions: [
-          {
-            url: "https://video.wixstatic.com/video/11062b_20125b6ebe434abd96c4d7773634d1db/480p/mp4/file.mp4",
-            height: 480,
-            width: 854,
-            format: "mp4",
-            quality: "480p",
-          },
-          {
-            url: "https://video.wixstatic.com/video/11062b_20125b6ebe434abd96c4d7773634d1db/720p/mp4/file.mp4",
-            height: 720,
-            width: 1280,
-            format: "mp4",
-            quality: "720p",
-          },
-          {
-            url: "https://video.wixstatic.com/video/11062b_20125b6ebe434abd96c4d7773634d1db/1080p/mp4/file.mp4",
-            height: 1080,
-            width: 1920,
-            format: "mp4",
-            quality: "1080p",
-          },
-        ],
-        filename: "11062b_20125b6ebe434abd96c4d7773634d1db",
-        url: "https://video.wixstatic.com/video/11062b_20125b6ebe434abd96c4d7773634d1db/1080p/mp4/file.mp4",
-        posters: [
-          {
-            id: "11062b_20125b6ebe434abd96c4d7773634d1dbf000.jpg",
-            url: "https://static.wixstatic.com/media/11062b_20125b6ebe434abd96c4d7773634d1dbf000.jpg",
-            height: 2160,
-            width: 3840,
-            filename: "11062b_20125b6ebe434abd96c4d7773634d1dbf000.jpg",
-          },
-          {
-            id: "11062b_20125b6ebe434abd96c4d7773634d1dbf001.jpg",
-            url: "https://static.wixstatic.com/media/11062b_20125b6ebe434abd96c4d7773634d1dbf001.jpg",
-            height: 2160,
-            width: 3840,
-            filename: "11062b_20125b6ebe434abd96c4d7773634d1dbf001.jpg",
-          },
-          {
-            id: "11062b_20125b6ebe434abd96c4d7773634d1dbf002.jpg",
-            url: "https://static.wixstatic.com/media/11062b_20125b6ebe434abd96c4d7773634d1dbf002.jpg",
-            height: 2160,
-            width: 3840,
-            filename: "11062b_20125b6ebe434abd96c4d7773634d1dbf002.jpg",
-          },
-          {
-            id: "11062b_20125b6ebe434abd96c4d7773634d1dbf003.jpg",
-            url: "https://static.wixstatic.com/media/11062b_20125b6ebe434abd96c4d7773634d1dbf003.jpg",
-            height: 2160,
-            width: 3840,
-            filename: "11062b_20125b6ebe434abd96c4d7773634d1dbf003.jpg",
-          },
-        ],
-      },
-      duration: "20000",
-    },
-    createdDate: "2022-03-02T09:13:33Z",
-  },
-];
+import apiService from "../utils/apiService";
 
 function ListGalleries() {
-  const [galleries, setGalleries] = useState(records);
+  const [galleries, setGalleries] = useState([]);
+  const [filterGalleries, setFilterGalleries] = useState([]);
   const [filter, setFilter] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    setGalleries(
-      records.filter(({ title }) =>
-        title.toLowerCase().includes(filter.toLowerCase())
-      )
-    );
-  }, [filter]);
+    const fetchData = async () => {
+      const data = await apiService.get("progallery/v2/galleries");
+      setGalleries(
+        data.galleries.map((gallery) => ({
+          ...gallery,
+          name: gallery.name || "Untitled",
+        }))
+      );
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    galleries &&
+      setFilterGalleries(
+        galleries.filter(({ name }) =>
+          name ? name.toLowerCase().includes(filter.toLowerCase()) : true
+        )
+      );
+  }, [filter, galleries]);
 
   const columns = [
     {
@@ -174,9 +58,9 @@ function ListGalleries() {
           width="72px"
           height="48px"
           src={
-            row.type === "IMAGE"
-              ? row.image.imageInfo.url
-              : row.video.videoInfo.posters[0].url
+            row.items[0].type === "IMAGE"
+              ? row.items[0].image.imageInfo.url
+              : row.items[0].video.videoInfo.posters[0].url
           }
         />
       ),
@@ -186,7 +70,7 @@ function ListGalleries() {
       render: (row) => (
         <Box direction="vertical" gap="3px">
           <Text size="medium" weight="normal">
-            {row.title}
+            {row.name}
           </Text>
           <Text size="tiny" weight="thin" secondary>
             {row.totalItems || 0} items .
@@ -222,14 +106,24 @@ function ListGalleries() {
             {
               text: "Duplicate",
               icon: <DuplicateSmall />,
-              onClick: () => {
-                setGalleries((prevGalleries) => [...prevGalleries, rowData]);
+              onClick: async () => {
+                const data = await apiService.post("progallery/v2/galleries", {
+                  gallery: {
+                    name: rowData.name,
+                    items: rowData.items,
+                  },
+                });
+                setGalleries((prevGalleries) => [
+                  data.gallery,
+                  ...prevGalleries,
+                ]);
               },
             },
             {
               text: "Delete",
               icon: <DeleteSmall />,
-              onClick: () => {
+              onClick: async () => {
+                await apiService.delete(`progallery/v2/galleries/${rowData.id}`);
                 setGalleries((prevGalleries) =>
                   prevGalleries.filter((gallery) => gallery.id !== rowData.id)
                 );
@@ -255,13 +149,13 @@ function ListGalleries() {
         }
       />
       <Page.Content>
-        <Table data={galleries} columns={columns} titleBarDisplay={false}>
+        <Table data={filterGalleries} columns={columns} titleBarDisplay={false}>
           <Page.Sticky>
             <Card>
               <TableToolbar>
                 <TableToolbar.ItemGroup position="start">
                   <TableToolbar.Item>
-                    <Text size="small">{galleries.length} galleries</Text>
+                    <Text size="small">{filterGalleries.length} galleries</Text>
                   </TableToolbar.Item>
                 </TableToolbar.ItemGroup>
                 <TableToolbar.ItemGroup position="end">

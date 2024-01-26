@@ -7,6 +7,8 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@wix/design-system": "^1.88.0",
+    "cors": "^2.8.5",
+    "http-proxy-middleware": "^2.0.6",
     "install": "^0.13.0",
     "moment": "^2.30.1",
     "npm": "^10.3.0",
@@ -14,6 +16,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
+    "uuid4": "^2.0.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
