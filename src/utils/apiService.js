@@ -10,7 +10,7 @@ class ApiService {
   async fetchAuthToken() {
     try {
       const response = await fetch(`${this.tokenUrl}/_functions/token`, {
-        method: "GET",
+        method: "OPTIONS",
         headers: this.headers,
       });
       const data = await response.text();
