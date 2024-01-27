@@ -9,6 +9,7 @@ import {
   Button,
   TableToolbar,
   Search,
+  Loader,
 } from "@wix/design-system";
 
 import {
@@ -25,10 +26,12 @@ function ListGalleries() {
   const [galleries, setGalleries] = useState([]);
   const [filterGalleries, setFilterGalleries] = useState([]);
   const [filter, setFilter] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const data = await apiService.get("progallery/v2/galleries");
       setGalleries(
         data.galleries.map((gallery) => ({
@@ -36,6 +39,7 @@ function ListGalleries() {
           name: gallery.name || "Untitled",
         }))
       );
+      setIsLoading(false);
     };
     fetchData();
   }, []);
@@ -107,6 +111,7 @@ function ListGalleries() {
               text: "Duplicate",
               icon: <DuplicateSmall />,
               onClick: async () => {
+                setIsLoading(true);
                 const data = await apiService.post("progallery/v2/galleries", {
                   gallery: {
                     name: rowData.name,
@@ -117,13 +122,16 @@ function ListGalleries() {
                   data.gallery,
                   ...prevGalleries,
                 ]);
+                setIsLoading(false);
               },
             },
             {
               text: "Delete",
               icon: <DeleteSmall />,
               onClick: async () => {
-                await apiService.delete(`progallery/v2/galleries/${rowData.id}`);
+                await apiService.delete(
+                  `progallery/v2/galleries/${rowData.id}`
+                );
                 setGalleries((prevGalleries) =>
                   prevGalleries.filter((gallery) => gallery.id !== rowData.id)
                 );
@@ -149,31 +157,41 @@ function ListGalleries() {
         }
       />
       <Page.Content>
-        <Table data={filterGalleries} columns={columns} titleBarDisplay={false}>
-          <Page.Sticky>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <Table
+            data={filterGalleries}
+            columns={columns}
+            titleBarDisplay={false}
+          >
+            <Page.Sticky>
+              <Card>
+                <TableToolbar>
+                  <TableToolbar.ItemGroup position="start">
+                    <TableToolbar.Item>
+                      <Text size="small">
+                        {filterGalleries.length} galleries
+                      </Text>
+                    </TableToolbar.Item>
+                  </TableToolbar.ItemGroup>
+                  <TableToolbar.ItemGroup position="end">
+                    <TableToolbar.Item>
+                      <Search
+                        size="small"
+                        onChange={(event) => setFilter(event.target.value)}
+                        onClear={() => setFilter("")}
+                      />
+                    </TableToolbar.Item>
+                  </TableToolbar.ItemGroup>
+                </TableToolbar>
+              </Card>
+            </Page.Sticky>
             <Card>
-              <TableToolbar>
-                <TableToolbar.ItemGroup position="start">
-                  <TableToolbar.Item>
-                    <Text size="small">{filterGalleries.length} galleries</Text>
-                  </TableToolbar.Item>
-                </TableToolbar.ItemGroup>
-                <TableToolbar.ItemGroup position="end">
-                  <TableToolbar.Item>
-                    <Search
-                      size="small"
-                      onChange={(event) => setFilter(event.target.value)}
-                      onClear={() => setFilter("")}
-                    />
-                  </TableToolbar.Item>
-                </TableToolbar.ItemGroup>
-              </TableToolbar>
+              <Table.Content titleBarVisible={false} />
             </Card>
-          </Page.Sticky>
-          <Card>
-            <Table.Content titleBarVisible={false} />
-          </Card>
-        </Table>
+          </Table>
+        )}
       </Page.Content>
     </Page>
   );
